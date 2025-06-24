@@ -9,9 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import roomescape.exception.BadRequestException;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,8 +35,17 @@ public class Reservation {
     private ReservationTime time;
 
     public Reservation(final ReservationName name, final ReservationDate date, final ReservationTime time) {
+        validateFutureDateTime(date, time);
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    private void validateFutureDateTime(final ReservationDate date, final ReservationTime time) {
+        LocalDateTime dateTime = LocalDateTime.of(date.getDate(), time.getStartAt());
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        if (!dateTime.isAfter(nowDateTime)) {
+            throw new BadRequestException("Reservation date and time should be future");
+        }
     }
 }

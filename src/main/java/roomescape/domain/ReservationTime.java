@@ -26,4 +26,8 @@ public class ReservationTime {
     public ReservationTime(final String startAt) {
         this.startAt = TimeUtils.parseLocalTime(startAt);
     }
+
+    public ReservationTime(final LocalTime startAt) {
+        this.startAt = startAt;
+    }
 }

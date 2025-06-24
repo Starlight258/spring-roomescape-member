@@ -15,16 +15,20 @@ public class ReservationDate {
 
     private LocalDate date;
 
+    public ReservationDate(final LocalDate date) {
+        this.date = date;
+    }
+
     public ReservationDate(final String date) {
         LocalDate parsedDate = TimeUtils.parseLocalDate(date);
-        validate(parsedDate);
+        validateNotPreviousDate(parsedDate);
         this.date = parsedDate;
     }
 
-    private void validate(final LocalDate date) {
+    private void validateNotPreviousDate(final LocalDate date) {
         LocalDate nowDate = LocalDate.now();
-        if (date.isBefore(nowDate) || date.isEqual(nowDate)) {
-            throw new BadRequestException("Reservation date must be future");
+        if (date.isBefore(nowDate)) {
+            throw new BadRequestException("Reservation date must not be previous");
         }
     }
 }
