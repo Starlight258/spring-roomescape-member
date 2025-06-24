@@ -1,6 +1,6 @@
 package roomescape.dto.response.reservation;
 
-import roomescape.domain.Reservation;
+import roomescape.domain.reservation.Reservation;
 import roomescape.dto.response.reservationtime.ReservationTimeRetrievalResponse;
 import roomescape.dto.response.theme.ThemeRetrievalResponse;
 

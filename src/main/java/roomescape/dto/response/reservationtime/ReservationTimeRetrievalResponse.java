@@ -3,7 +3,7 @@ package roomescape.dto.response.reservationtime;
 import static roomescape.common.TimeUtils.truncatedLocalTimeByMinutes;
 
 import java.time.LocalTime;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.reservationtime.ReservationTime;
 
 public record ReservationTimeRetrievalResponse(Long id, String startAt) {
 
