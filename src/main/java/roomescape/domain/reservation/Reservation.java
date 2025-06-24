@@ -27,7 +27,7 @@ public class Reservation {
     private Long id;
 
     @Embedded
-    private ReservationName name;
+    private MemberName name;
 
     @Embedded
     private ReservationDate date;
@@ -40,7 +40,7 @@ public class Reservation {
     @JoinColumn(name = "theme_id")
     private Theme theme;
 
-    public Reservation(final ReservationName name, final ReservationDate date, final ReservationTime time,
+    public Reservation(final MemberName name, final ReservationDate date, final ReservationTime time,
                        final Theme theme) {
         validateFutureDateTime(date, time);
         this.name = name;

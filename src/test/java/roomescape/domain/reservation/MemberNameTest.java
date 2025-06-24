@@ -5,14 +5,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import roomescape.exception.BadRequestException;
 
-class ReservationNameTest {
+class MemberNameTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 이름은_비어있어서는_안된다(String input) {
-        Assertions.assertThatThrownBy(() -> new ReservationName(input))
+    void 멤버_이름은_비어있어서는_안된다(String input) {
+        Assertions.assertThatThrownBy(() -> new MemberName(input))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("Name is mandatory");
+                .hasMessageContaining("Member name is mandatory");
     }
 
 }

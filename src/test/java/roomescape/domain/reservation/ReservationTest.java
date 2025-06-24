@@ -14,7 +14,7 @@ class ReservationTest {
     @Test
     void 예약은_현재_시간_이후로만_가능하다() {
         // Given
-        ReservationName name = new ReservationName("mint");
+        MemberName name = new MemberName("mint");
         ReservationDate date = new ReservationDate(LocalDate.now());
         ReservationTime time = new ReservationTime(LocalTime.now().plusHours(1));
         Theme theme = UnitTestFixture.makeTheme();
@@ -27,7 +27,7 @@ class ReservationTest {
     @Test
     void 과거_시간으로_예약은_불가능하다() {
         // Given
-        ReservationName name = new ReservationName("mint");
+        MemberName name = new MemberName("mint");
         ReservationDate date = new ReservationDate(LocalDate.now());
         ReservationTime time = new ReservationTime(LocalTime.now().minusHours(1));
         Theme theme = UnitTestFixture.makeTheme();

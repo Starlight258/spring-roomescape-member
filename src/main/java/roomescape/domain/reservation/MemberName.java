@@ -10,19 +10,19 @@ import roomescape.exception.BadRequestException;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ReservationName {
+public class MemberName {
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
-    public ReservationName(final String name) {
+    public MemberName(final String name) {
         validate(name);
         this.name = name;
     }
 
     private void validate(final String name) {
         if (name.isBlank()) {
-            throw new BadRequestException("Name is mandatory");
+            throw new BadRequestException("Member name is mandatory");
         }
     }
 }

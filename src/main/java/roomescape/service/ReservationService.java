@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.common.TimeUtils;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.domain.reservation.ReservationName;
+import roomescape.domain.reservation.MemberName;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.theme.Theme;
 import roomescape.dto.request.reservation.ReservationPreservationRequest;
@@ -32,14 +32,14 @@ public class ReservationService {
     }
 
     public ReservationPreservationResponse create(final ReservationPreservationRequest request) {
-        ReservationName reservationName = new ReservationName(request.name());
+        MemberName memberName = new MemberName(request.name());
         ReservationTime reservationTime = getReservationTime(request.timeId());
         ReservationDate reservationDate = new ReservationDate(TimeUtils.parseLocalDate(request.date()));
         Theme theme = getTheme(request.themeId());
         validateReservationExists(reservationDate, reservationTime, theme);
 
         Reservation savedReservation = reservationRepository.save(
-                new Reservation(reservationName, reservationDate, reservationTime, theme));
+                new Reservation(memberName, reservationDate, reservationTime, theme));
         return ReservationPreservationResponse.from(savedReservation);
     }
 
