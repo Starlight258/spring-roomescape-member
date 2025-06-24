@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.request.ReservationPreservationRequest;
-import roomescape.dto.response.ReservationPreservationResponse;
-import roomescape.dto.response.ReservationRetrievalResponse;
+import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.dto.response.reservation.ReservationPreservationResponse;
+import roomescape.dto.response.reservation.ReservationRetrievalResponse;
 import roomescape.service.ReservationService;
 
 @RestController

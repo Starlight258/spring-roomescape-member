@@ -1,7 +1,8 @@
-package roomescape.dto.response;
+package roomescape.dto.response.reservation;
 
 import java.time.LocalDate;
 import roomescape.domain.Reservation;
+import roomescape.dto.response.reservationtime.ReservationTimeRetrievalResponse;
 
 public record ReservationPreservationResponse(Long id, String name, LocalDate date, ReservationTimeRetrievalResponse time) {
 
