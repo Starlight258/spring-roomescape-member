@@ -3,13 +3,9 @@ package roomescape.service;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
-import roomescape.domain.reservation.ReservationDate;
+import roomescape.domain.theme.PopularTheme;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.theme.ThemeDescription;
 import roomescape.domain.theme.ThemeName;
@@ -24,6 +20,8 @@ import roomescape.repository.ThemeRepository;
 
 @Service
 public class ThemeService {
+
+    private static final int POPULAR_THEME_SIZE = 10;
 
     private final ThemeRepository themeRepository;
     private final ReservationRepository reservationRepository;
@@ -55,20 +53,10 @@ public class ThemeService {
     public List<ThemePopularResponse> findTopPopular() {
         List<Theme> themes = themeRepository.findAll();
         LocalDate nowDate = LocalDate.now();
-        ReservationDate startDate = new ReservationDate(nowDate.minusDays(7));
-        ReservationDate endDate = new ReservationDate(nowDate.minusDays(1));
-        Map<Theme, Long> counts = new LinkedHashMap<>();
-        for (Theme theme : themes) {
-            Long count = reservationRepository.countByDateBetweenAndTheme(startDate,
-                    endDate, theme);
-            counts.put(theme, count);
-        }
-
-        return counts.entrySet()
+        PopularTheme popularTheme = new PopularTheme(nowDate, themes,
+                reservationRepository::countByDateBetweenAndTheme);
+        return popularTheme.findTopPopular(POPULAR_THEME_SIZE)
                 .stream()
-                .sorted(Entry.comparingByValue(Collections.reverseOrder()))
-                .limit(10)
-                .map(Entry::getKey)
                 .map(ThemePopularResponse::from)
                 .toList();
     }
