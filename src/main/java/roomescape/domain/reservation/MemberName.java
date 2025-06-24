@@ -12,7 +12,7 @@ import roomescape.exception.BadRequestException;
 @Getter
 public class MemberName {
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     public MemberName(final String name) {
