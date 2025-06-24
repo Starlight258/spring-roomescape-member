@@ -15,11 +15,16 @@ public class AdminViewController {
 
     @GetMapping("/reservation")
     public String getAdminReservationPage() {
-        return "admin/reservation";
+        return "admin/reservation-new";
     }
 
     @GetMapping("/time")
     public String getAdminReservationTimePage() {
         return "admin/time";
+    }
+
+    @GetMapping("/theme")
+    public String getAdminThemePage() {
+        return "admin/theme";
     }
 }
