@@ -16,13 +16,12 @@ public class ReservationDate {
     private LocalDate date;
 
     public ReservationDate(final LocalDate date) {
+        validateNotPreviousDate(date);
         this.date = date;
     }
 
     public ReservationDate(final String date) {
-        LocalDate parsedDate = TimeUtils.parseLocalDate(date);
-        validateNotPreviousDate(parsedDate);
-        this.date = parsedDate;
+        this(TimeUtils.parseLocalDate(date));
     }
 
     private void validateNotPreviousDate(final LocalDate date) {

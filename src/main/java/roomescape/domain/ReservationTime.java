@@ -23,11 +23,11 @@ public class ReservationTime {
     @Column(name = "start_at", nullable = false)
     private LocalTime startAt;
 
-    public ReservationTime(final String startAt) {
-        this.startAt = TimeUtils.parseLocalTime(startAt);
-    }
-
     public ReservationTime(final LocalTime startAt) {
         this.startAt = startAt;
+    }
+
+    public ReservationTime(final String startAt) {
+        this(TimeUtils.parseLocalTime(startAt));
     }
 }
