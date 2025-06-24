@@ -9,7 +9,7 @@ class ReservationDateTest {
 
     @Test
     void 예약_날짜는_과거일수_없다() {
-        String yesterdayDate = LocalDate.now().minusDays(1).toString();
+        LocalDate yesterdayDate = LocalDate.now().minusDays(1);
         Assertions.assertThatThrownBy(() -> new ReservationDate(yesterdayDate))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Reservation date must not be previous");

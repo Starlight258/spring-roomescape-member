@@ -9,7 +9,6 @@ import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import roomescape.common.TimeUtils;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,9 +24,5 @@ public class ReservationTime {
 
     public ReservationTime(final LocalTime startAt) {
         this.startAt = startAt;
-    }
-
-    public ReservationTime(final String startAt) {
-        this(TimeUtils.parseLocalTime(startAt));
     }
 }

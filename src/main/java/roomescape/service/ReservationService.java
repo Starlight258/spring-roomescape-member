@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.common.TimeUtils;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservation.ReservationName;
@@ -33,7 +34,7 @@ public class ReservationService {
     public ReservationPreservationResponse create(final ReservationPreservationRequest request) {
         ReservationName reservationName = new ReservationName(request.name());
         ReservationTime reservationTime = getReservationTime(request.timeId());
-        ReservationDate reservationDate = new ReservationDate(request.date());
+        ReservationDate reservationDate = new ReservationDate(TimeUtils.parseLocalDate(request.date()));
         Theme theme = getTheme(request.themeId());
         validateReservationExists(reservationDate, reservationTime, theme);
 
