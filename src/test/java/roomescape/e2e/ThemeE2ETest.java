@@ -27,6 +27,7 @@ public class ThemeE2ETest {
 
     @Test
     void findThemes() {
+        E2ETestFixture.saveTheme();
         RestAssured.given().log().all()
                 .when().get("/themes")
                 .then().log().all()
