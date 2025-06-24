@@ -37,10 +37,4 @@ public class Reservation {
         this.date = date;
         this.time = time;
     }
-
-    public Reservation(final String name, final String date, final ReservationTime time) {
-        this.name = new ReservationName(name);
-        this.date = new ReservationDate(date);
-        this.time = time;
-    }
 }

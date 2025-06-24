@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import roomescape.common.TimeUtils;
-import roomescape.exception.ValidationException;
+import roomescape.exception.BadRequestException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +24,7 @@ public class ReservationDate {
     private void validate(final LocalDate date) {
         LocalDate nowDate = LocalDate.now();
         if (date.isBefore(nowDate) || date.isEqual(nowDate)) {
-            throw new ValidationException("Reservation date must be future");
+            throw new BadRequestException("Reservation date must be future");
         }
     }
 }

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import roomescape.exception.BadRequestException;
 
 public class TimeUtils {
 
@@ -15,7 +16,7 @@ public class TimeUtils {
         try {
             return LocalDate.parse(date);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("유효하지 않은 날짜입니다.");
+            throw new BadRequestException("유효하지 않은 날짜입니다.");
         }
     }
 
@@ -23,7 +24,7 @@ public class TimeUtils {
         try {
             return LocalTime.parse(time);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("유효하지 않은 시간입니다.");
+            throw new BadRequestException("유효하지 않은 시간입니다.");
         }
     }
 }

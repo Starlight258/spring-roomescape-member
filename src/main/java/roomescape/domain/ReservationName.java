@@ -4,7 +4,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import roomescape.exception.ValidationException;
+import roomescape.exception.BadRequestException;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +20,7 @@ public class ReservationName {
 
     private void validate(final String name) {
         if (name.isBlank()) {
-            throw new ValidationException("Name is mandatory");
+            throw new BadRequestException("Name is mandatory");
         }
     }
 }

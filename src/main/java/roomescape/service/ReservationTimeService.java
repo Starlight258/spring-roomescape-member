@@ -6,19 +6,27 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimePreservationRequest;
 import roomescape.dto.response.ReservationTimePreservationResponse;
 import roomescape.dto.response.ReservationTimeRetrievalResponse;
+import roomescape.exception.BadRequestException;
+import roomescape.exception.ConflictException;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
 
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(final ReservationRepository reservationRepository,
+                                  final ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public ReservationTimePreservationResponse create(final ReservationTimePreservationRequest request) {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(new ReservationTime(request.startAt()));
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
+        validateReservationTimeExists(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimePreservationResponse.from(savedReservationTime);
     }
 
@@ -30,6 +38,19 @@ public class ReservationTimeService {
     }
 
     public void remove(final Long id) {
+        validateReservationNotExists(id);
         reservationTimeRepository.deleteById(id);
+    }
+
+    private void validateReservationTimeExists(final ReservationTime reservationTime) {
+        if (reservationTimeRepository.existsByStartAt(reservationTime.getStartAt())) {
+            throw new ConflictException("Reservation time is already exists");
+        }
+    }
+
+    private void validateReservationNotExists(final Long id) {
+        if (reservationRepository.existsByTimeId(id)) {
+            throw new BadRequestException("The reservation time is referenced by reservation");
+        }
     }
 }

@@ -3,7 +3,7 @@ package roomescape.domain;
 import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import roomescape.exception.ValidationException;
+import roomescape.exception.BadRequestException;
 
 class ReservationDateTest {
 
@@ -11,7 +11,7 @@ class ReservationDateTest {
     void 예약_날짜는_현재일수_없다() {
         String nowDate = LocalDate.now().toString();
         Assertions.assertThatThrownBy(() -> new ReservationDate(nowDate))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Reservation date must be future");
     }
 
@@ -19,7 +19,7 @@ class ReservationDateTest {
     void 예약_날짜는_과거일수_없다() {
         String yesterdayDate = LocalDate.now().minusDays(1).toString();
         Assertions.assertThatThrownBy(() -> new ReservationDate(yesterdayDate))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Reservation date must be future");
     }
 }
