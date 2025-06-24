@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import roomescape.domain.member.Member;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.theme.Theme;
 import roomescape.exception.BadRequestException;
@@ -27,9 +28,6 @@ public class Reservation {
     private Long id;
 
     @Embedded
-    private MemberName name;
-
-    @Embedded
     private ReservationDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
@@ -40,13 +38,16 @@ public class Reservation {
     @JoinColumn(name = "theme_id")
     private Theme theme;
 
-    public Reservation(final MemberName name, final ReservationDate date, final ReservationTime time,
-                       final Theme theme) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public Reservation(final ReservationDate date, final ReservationTime time, final Theme theme, final Member member) {
         validateFutureDateTime(date, time);
-        this.name = name;
         this.date = date;
         this.time = time;
         this.theme = theme;
+        this.member = member;
     }
 
     private void validateFutureDateTime(final ReservationDate date, final ReservationTime time) {

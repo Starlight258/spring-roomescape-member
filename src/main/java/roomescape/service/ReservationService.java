@@ -3,15 +3,17 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.common.TimeUtils;
+import roomescape.domain.member.Member;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.domain.reservation.MemberName;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.theme.Theme;
-import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.dto.request.member.MemberPrinciple;
+import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservation.ReservationRetrievalResponse;
 import roomescape.exception.ConflictException;
+import roomescape.repository.MemberRepository;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.repository.ThemeRepository;
@@ -22,24 +24,27 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
     private final ThemeRepository themeRepository;
+    private final MemberRepository memberRepository;
 
     public ReservationService(final ReservationRepository reservationRepository,
                               final ReservationTimeRepository reservationTimeRepository,
-                              final ThemeRepository themeRepository) {
+                              final ThemeRepository themeRepository, final MemberRepository memberRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
         this.themeRepository = themeRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public ReservationPreservationResponse create(final ReservationPreservationRequest request) {
-        MemberName memberName = new MemberName(request.name());
+    public ReservationPreservationResponse createByRegular(final ReservationPreservationRegularRequest request,
+                                                           final MemberPrinciple memberPrinciple) {
+        Member member = getMember(memberPrinciple.memberId());
         ReservationTime reservationTime = getReservationTime(request.timeId());
         ReservationDate reservationDate = new ReservationDate(TimeUtils.parseLocalDate(request.date()));
         Theme theme = getTheme(request.themeId());
         validateReservationExists(reservationDate, reservationTime, theme);
 
         Reservation savedReservation = reservationRepository.save(
-                new Reservation(memberName, reservationDate, reservationTime, theme));
+                new Reservation(reservationDate, reservationTime, theme, member));
         return ReservationPreservationResponse.from(savedReservation);
     }
 
@@ -71,5 +76,10 @@ public class ReservationService {
                 theme.getId())) {
             throw new ConflictException("Reservation is already exists");
         }
+    }
+
+    private Member getMember(final Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
     }
 }

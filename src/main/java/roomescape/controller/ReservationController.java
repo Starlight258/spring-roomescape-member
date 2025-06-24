@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.auth.RequireRole;
+import roomescape.dto.request.member.MemberPrinciple;
+import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservation.ReservationRetrievalResponse;
 import roomescape.service.ReservationService;
@@ -27,9 +29,21 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationPreservationResponse> create(
-            final @RequestBody @Valid ReservationPreservationRequest request) {
-        ReservationPreservationResponse response = reservationService.create(request);
+    @RequireRole
+    public ResponseEntity<ReservationPreservationResponse> createByRegular(
+            final @RequestBody @Valid ReservationPreservationRegularRequest request,
+            final MemberPrinciple memberPrinciple
+    ) {
+        ReservationPreservationResponse response = reservationService.createByRegular(request, memberPrinciple);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping
+    @RequireRole
+    public ResponseEntity<ReservationPreservationResponse> createByAdmin(
+            final @RequestBody @Valid ReservationPreservationRegularRequest request
+    ) {
+        ReservationPreservationResponse response = reservationService.createByAdmin(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
