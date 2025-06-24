@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimePreservationRequest;
 import roomescape.dto.response.ReservationTimePreservationResponse;
-import roomescape.dto.response.ReservationTimeRetrieval;
+import roomescape.dto.response.ReservationTimeRetrievalResponse;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
@@ -22,10 +22,10 @@ public class ReservationTimeService {
         return ReservationTimePreservationResponse.from(savedReservationTime);
     }
 
-    public List<ReservationTimeRetrieval> findAll() {
+    public List<ReservationTimeRetrievalResponse> findAll() {
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         return reservationTimes.stream()
-                .map(ReservationTimeRetrieval::from)
+                .map(ReservationTimeRetrievalResponse::from)
                 .toList();
     }
 

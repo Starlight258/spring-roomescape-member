@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationPreservationRequest;
 import roomescape.dto.response.ReservationPreservationResponse;
-import roomescape.dto.response.TotalReservationRetrieval;
+import roomescape.dto.response.ReservationRetrievalResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -30,10 +30,10 @@ public class ReservationService {
         return ReservationPreservationResponse.from(savedReservation);
     }
 
-    public List<TotalReservationRetrieval> findAll() {
+    public List<ReservationRetrievalResponse> findAll() {
         List<Reservation> reservations = reservationRepository.findAll();
         return reservations.stream()
-                .map(TotalReservationRetrieval::from)
+                .map(ReservationRetrievalResponse::from)
                 .toList();
     }
 

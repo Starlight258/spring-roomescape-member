@@ -5,10 +5,10 @@ import static roomescape.common.TimeUtils.truncatedLocalTimeByMinutes;
 import java.time.LocalTime;
 import roomescape.domain.ReservationTime;
 
-public record ReservationTimeRetrieval(Long id, String startAt) {
+public record ReservationTimeRetrievalResponse(Long id, String startAt) {
 
-    public static ReservationTimeRetrieval from(ReservationTime reservationTime) {
+    public static ReservationTimeRetrievalResponse from(ReservationTime reservationTime) {
         LocalTime truncatedLocalTime = truncatedLocalTimeByMinutes(reservationTime.getStartAt());
-        return new ReservationTimeRetrieval(reservationTime.getId(), truncatedLocalTime.toString());
+        return new ReservationTimeRetrievalResponse(reservationTime.getId(), truncatedLocalTime.toString());
     }
 }
