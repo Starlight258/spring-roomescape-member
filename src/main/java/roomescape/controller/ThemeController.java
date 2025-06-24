@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.request.theme.ThemePreservationRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
+import roomescape.dto.response.theme.ThemePopularResponse;
 import roomescape.dto.response.theme.ThemeRetrievalResponse;
 import roomescape.service.ThemeService;
 
@@ -36,6 +37,11 @@ public class ThemeController {
     @GetMapping
     public List<ThemeRetrievalResponse> findAll() {
         return themeService.findAll();
+    }
+
+    @GetMapping("/popular")
+    public List<ThemePopularResponse> findTopPopular() {
+        return themeService.findTopPopular();
     }
 
     @DeleteMapping("/{id}")

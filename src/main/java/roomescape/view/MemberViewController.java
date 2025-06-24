@@ -10,4 +10,9 @@ public class MemberViewController {
     public String getMemberReservationPage() {
         return "reservation";
     }
+
+    @GetMapping
+    public String getPopularThemesPage() {
+        return "index";
+    }
 }

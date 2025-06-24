@@ -2,13 +2,20 @@ package roomescape.service;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
+import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.theme.ThemeDescription;
 import roomescape.domain.theme.ThemeName;
 import roomescape.domain.theme.ThemeThumbnail;
 import roomescape.dto.request.theme.ThemePreservationRequest;
+import roomescape.dto.response.theme.ThemePopularResponse;
 import roomescape.dto.response.theme.ThemeRetrievalResponse;
 import roomescape.exception.BadRequestException;
 import roomescape.exception.ConflictException;
@@ -42,6 +49,27 @@ public class ThemeService {
         List<Theme> themes = themeRepository.findAll();
         return themes.stream()
                 .map(ThemeRetrievalResponse::from)
+                .toList();
+    }
+
+    public List<ThemePopularResponse> findTopPopular() {
+        List<Theme> themes = themeRepository.findAll();
+        LocalDate nowDate = LocalDate.now();
+        ReservationDate startDate = new ReservationDate(nowDate.minusDays(7));
+        ReservationDate endDate = new ReservationDate(nowDate.minusDays(1));
+        Map<Theme, Long> counts = new LinkedHashMap<>();
+        for (Theme theme : themes) {
+            Long count = reservationRepository.countByDateBetweenAndTheme(startDate,
+                    endDate, theme);
+            counts.put(theme, count);
+        }
+
+        return counts.entrySet()
+                .stream()
+                .sorted(Entry.comparingByValue(Collections.reverseOrder()))
+                .limit(10)
+                .map(Entry::getKey)
+                .map(ThemePopularResponse::from)
                 .toList();
     }
 

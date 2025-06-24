@@ -1,9 +1,13 @@
 package roomescape.e2e;
 
 import static org.hamcrest.Matchers.is;
+import static roomescape.fixture.E2ETestFixture.DEFAULT_THEME_NAME;
 
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
+import java.util.List;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,7 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
 import roomescape.dto.request.theme.ThemePreservationRequest;
+import roomescape.dto.response.theme.ThemePopularResponse;
 import roomescape.fixture.E2ETestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -30,16 +36,6 @@ public class ThemeE2ETest {
     }
 
     @Test
-    void findThemes() {
-        E2ETestFixture.saveTheme();
-        RestAssured.given().log().all()
-                .when().get("/themes")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Test
     void saveTheme() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -49,6 +45,34 @@ public class ThemeE2ETest {
                 .statusCode(201)
                 .body("id", is(1));
 
+        RestAssured.given().log().all()
+                .when().get("/themes")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    @Sql("/themes/top-popular.sql")
+    void findTopPopular() {
+        List<ThemePopularResponse> responses = RestAssured.given().log().all()
+                .when().get("/themes/popular")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(new TypeRef<>() {
+                });
+
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(responses.getFirst().name()).isEqualTo("감성");
+            softAssertions.assertThat(responses.get(1).name()).isEqualTo("모험");
+            softAssertions.assertThat(responses.size()).isEqualTo(10);
+        });
+    }
+
+    @Test
+    void findThemes() {
+        E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
         RestAssured.given().log().all()
                 .when().get("/themes")
                 .then().log().all()

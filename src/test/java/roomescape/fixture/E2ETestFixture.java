@@ -18,6 +18,8 @@ import roomescape.dto.response.theme.ThemeRetrievalResponse;
 
 public class E2ETestFixture {
 
+    public static final String DEFAULT_THEME_NAME = "기억저장소";
+
     public static Long saveReservationTime(LocalTime time) {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", time.toString());
@@ -35,10 +37,10 @@ public class E2ETestFixture {
         return response.id();
     }
 
-    public static Long saveTheme() {
+    public static Long saveTheme(String name) {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ThemePreservationRequest("기억저장소", "memory", "thumbnail.png"))
+                .body(new ThemePreservationRequest(name, "memory", "thumbnail.png"))
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(201)

@@ -61,7 +61,7 @@ public class ReservationTimeE2ETest {
         // given
         Long timeId1 = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
         E2ETestFixture.saveReservationTime(LocalTime.of(11, 0));
-        Long themeId = E2ETestFixture.saveTheme();
+        Long themeId = E2ETestFixture.saveTheme(E2ETestFixture.DEFAULT_THEME_NAME);
         LocalDate date = UnitTestFixture.makeFutureDate();
         E2ETestFixture.saveReservation(date, timeId1, themeId);
 

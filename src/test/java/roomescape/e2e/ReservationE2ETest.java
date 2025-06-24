@@ -1,6 +1,7 @@
 package roomescape.e2e;
 
 import static org.hamcrest.Matchers.is;
+import static roomescape.fixture.E2ETestFixture.DEFAULT_THEME_NAME;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -32,21 +33,9 @@ public class ReservationE2ETest {
     }
 
     @Test
-    void findReservations() {
-        Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
-        Long themeId = E2ETestFixture.saveTheme();
-        E2ETestFixture.saveReservation(UnitTestFixture.makeFutureDate(), timeId, themeId);
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Test
     void saveReservation() {
         Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
-        Long themeId = E2ETestFixture.saveTheme();
+        Long themeId = E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -56,6 +45,18 @@ public class ReservationE2ETest {
                 .statusCode(201)
                 .body("id", is(1));
 
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void findReservations() {
+        Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
+        Long themeId = E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
+        E2ETestFixture.saveReservation(UnitTestFixture.makeFutureDate(), timeId, themeId);
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
