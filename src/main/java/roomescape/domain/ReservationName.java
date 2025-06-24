@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import roomescape.exception.BadRequestException;
 @Getter
 public class ReservationName {
 
+    @Column(nullable = false)
     private String name;
 
     public ReservationName(final String name) {
