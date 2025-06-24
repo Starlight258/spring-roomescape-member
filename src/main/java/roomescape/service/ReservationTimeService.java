@@ -3,8 +3,10 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.common.TimeUtils;
+import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.dto.request.reservationtime.ReservationTimePreservationRequest;
+import roomescape.dto.response.reservationtime.ReservationTimeAvailableResponse;
 import roomescape.dto.response.reservationtime.ReservationTimePreservationResponse;
 import roomescape.dto.response.reservationtime.ReservationTimeRetrievalResponse;
 import roomescape.exception.BadRequestException;
@@ -36,6 +38,24 @@ public class ReservationTimeService {
         return reservationTimes.stream()
                 .map(ReservationTimeRetrievalResponse::from)
                 .toList();
+    }
+
+    public List<ReservationTimeAvailableResponse> findAllAvailable(final String date, final Long themeId) {
+        ReservationDate parsedDate = new ReservationDate(TimeUtils.parseLocalDate(date));
+        List<ReservationTime> times = reservationTimeRepository.findAll();
+        return times.stream()
+                .map(time -> makeReservationTimeAvailableResponse(parsedDate, time, themeId))
+                .toList();
+    }
+
+    private ReservationTimeAvailableResponse makeReservationTimeAvailableResponse(ReservationDate date,
+                                                                                  ReservationTime time, Long themeId) {
+        Long timeId = time.getId();
+        String startAt = TimeUtils.truncatedLocalTimeByMinutes(time.getStartAt()).toString();
+        if (reservationRepository.existsByDateAndTimeIdAndThemeId(date, timeId, themeId)) {
+            return new ReservationTimeAvailableResponse(startAt, timeId, true);
+        }
+        return new ReservationTimeAvailableResponse(startAt, timeId, false);
     }
 
     public void remove(final Long id) {

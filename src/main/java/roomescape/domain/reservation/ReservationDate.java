@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import roomescape.common.TimeUtils;
 import roomescape.exception.BadRequestException;
 
 @Embeddable
@@ -20,10 +19,6 @@ public class ReservationDate {
     public ReservationDate(final LocalDate date) {
         validateNotPreviousDate(date);
         this.date = date;
-    }
-
-    public ReservationDate(final String date) {
-        this(TimeUtils.parseLocalDate(date));
     }
 
     private void validateNotPreviousDate(final LocalDate date) {

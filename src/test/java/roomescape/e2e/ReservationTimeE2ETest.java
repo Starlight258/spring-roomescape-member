@@ -3,15 +3,24 @@ package roomescape.e2e;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.request.reservationtime.ReservationTimeAvailableRequest;
+import roomescape.dto.response.reservationtime.ReservationTimeAvailableResponse;
+import roomescape.fixture.E2ETestFixture;
+import roomescape.fixture.UnitTestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -42,6 +51,33 @@ public class ReservationTimeE2ETest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void findAllAvailable() {
+        // given
+        Long timeId1 = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
+        E2ETestFixture.saveReservationTime(LocalTime.of(11, 0));
+        Long themeId = E2ETestFixture.saveTheme();
+        LocalDate date = UnitTestFixture.makeFutureDate();
+        E2ETestFixture.saveReservation(date, timeId1, themeId);
+
+        // when
+        List<ReservationTimeAvailableResponse> responses = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new ReservationTimeAvailableRequest(date.toString(), themeId))
+                .when().get("/times/available")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .as(new TypeRef<>() {
+                });
+
+        // then
+        SoftAssertions.assertSoftly(softAssertions -> {
+            softAssertions.assertThat(responses.getFirst().alreadyBooked()).isTrue();
+            softAssertions.assertThat(responses.get(1).alreadyBooked()).isFalse();
+        });
     }
 
     @Test

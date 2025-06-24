@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.request.reservation.ReservationPreservationRequest;
 import roomescape.fixture.E2ETestFixture;
+import roomescape.fixture.UnitTestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -27,7 +29,9 @@ public class ReservationE2ETest {
 
     @Test
     void findReservations() {
-        E2ETestFixture.saveReservation();
+        Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
+        Long themeId = E2ETestFixture.saveTheme();
+        E2ETestFixture.saveReservation(UnitTestFixture.makeFutureDate(), timeId, themeId);
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -37,7 +41,7 @@ public class ReservationE2ETest {
 
     @Test
     void saveReservation() {
-        Long timeId = E2ETestFixture.saveReservationTime();
+        Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
         Long themeId = E2ETestFixture.saveTheme();
 
         RestAssured.given().log().all()

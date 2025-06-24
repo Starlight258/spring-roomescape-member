@@ -1,5 +1,6 @@
 package roomescape.fixture;
 
+import java.time.LocalDate;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.theme.ThemeDescription;
 import roomescape.domain.theme.ThemeName;
@@ -14,4 +15,7 @@ public class UnitTestFixture {
         );
     }
 
+    public static LocalDate makeFutureDate() {
+        return LocalDate.now().plusDays(1);
+    }
 }
