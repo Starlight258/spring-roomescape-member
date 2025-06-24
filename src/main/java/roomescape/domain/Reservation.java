@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -34,11 +35,17 @@ public class Reservation {
     @JoinColumn(name = "time_id")
     private ReservationTime time;
 
-    public Reservation(final ReservationName name, final ReservationDate date, final ReservationTime time) {
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "theme_id")
+    private Theme theme;
+
+    public Reservation(final ReservationName name, final ReservationDate date, final ReservationTime time,
+                       final Theme theme) {
         validateFutureDateTime(date, time);
         this.name = name;
         this.date = date;
         this.time = time;
+        this.theme = theme;
     }
 
     private void validateFutureDateTime(final ReservationDate date, final ReservationTime time) {

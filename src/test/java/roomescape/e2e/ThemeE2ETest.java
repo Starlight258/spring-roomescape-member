@@ -10,12 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.dto.request.theme.ThemePreservationRequest;
 import roomescape.fixture.E2ETestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationE2ETest {
+public class ThemeE2ETest {
 
     @LocalServerPort
     int port;
@@ -26,46 +26,42 @@ public class ReservationE2ETest {
     }
 
     @Test
-    void findReservations() {
-        E2ETestFixture.saveReservation();
+    void findThemes() {
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/themes")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
 
     @Test
-    void saveReservation() {
-        Long timeId = E2ETestFixture.saveReservationTime();
-        Long themeId = E2ETestFixture.saveTheme();
-
+    void saveTheme() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationPreservationRequest("mint", "2026-02-05", timeId, themeId))
-                .when().post("/reservations")
+                .body(new ThemePreservationRequest("추리", "셜록", "thumbnail.png"))
+                .when().post("/themes")
                 .then().log().all()
                 .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/themes")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
 
     @Test
-    void deleteReservation() {
-        saveReservation();
+    void deleteTheme() {
+        saveTheme();
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/themes/1")
                 .then().log().all()
                 .statusCode(204);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/themes")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
