@@ -11,12 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import roomescape.dto.request.reservation.ReservationPreservationRequest;
 import roomescape.fixture.E2ETestFixture;
 import roomescape.fixture.UnitTestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestPropertySource(properties = {
+        "spring.sql.init.data-locations="
+})
 public class ReservationE2ETest {
 
     @LocalServerPort

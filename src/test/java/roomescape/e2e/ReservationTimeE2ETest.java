@@ -17,13 +17,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.request.reservationtime.ReservationTimeAvailableRequest;
+import org.springframework.test.context.TestPropertySource;
 import roomescape.dto.response.reservationtime.ReservationTimeAvailableResponse;
 import roomescape.fixture.E2ETestFixture;
 import roomescape.fixture.UnitTestFixture;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@TestPropertySource(properties = {
+        "spring.sql.init.data-locations="
+})
 public class ReservationTimeE2ETest {
 
     @LocalServerPort
@@ -65,7 +68,7 @@ public class ReservationTimeE2ETest {
         // when
         List<ReservationTimeAvailableResponse> responses = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationTimeAvailableRequest(date.toString(), themeId))
+                .params("date", date.toString(), "themeId", themeId)
                 .when().get("/times/available")
                 .then().log().all()
                 .statusCode(200)

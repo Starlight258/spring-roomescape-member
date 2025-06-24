@@ -38,7 +38,7 @@ public class E2ETestFixture {
     public static Long saveTheme() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ThemePreservationRequest("추리", "셜록", "thumbnail.png"))
+                .body(new ThemePreservationRequest("기억저장소", "memory", "thumbnail.png"))
                 .when().post("/themes")
                 .then().log().all()
                 .statusCode(201)
