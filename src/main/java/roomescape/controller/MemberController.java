@@ -1,18 +1,22 @@
 package roomescape.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.dto.request.member.LoginRequest;
 import roomescape.dto.request.member.SignupRequest;
+import roomescape.dto.response.member.CheckLoginResponse;
 import roomescape.dto.response.member.SignupResponse;
 import roomescape.service.MemberService;
 
 @RestController
-@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -21,9 +25,24 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @PostMapping
+    @PostMapping("/members")
     public ResponseEntity<SignupResponse> signup(final @RequestBody @Valid SignupRequest request) {
         SignupResponse response = memberService.signup(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> login(final @RequestBody @Valid LoginRequest request, final HttpSession httpSession) {
+        ResponseCookie responseCookie = memberService.login(request, httpSession);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .build();
+    }
+
+    @GetMapping("/login/check")
+    public ResponseEntity<CheckLoginResponse> checkLogin(final HttpSession httpSession) {
+        CheckLoginResponse response = memberService.checkLogin(httpSession);
+        return ResponseEntity.ok().body(response);
     }
 }

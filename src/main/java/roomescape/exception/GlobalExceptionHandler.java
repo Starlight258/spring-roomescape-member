@@ -23,6 +23,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    @ExceptionHandler(UnAuthorizedException.class)
+    public ResponseEntity<String> handleUnAuthorizedException(final UnAuthorizedException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
     @ExceptionHandler(RoomescapeException.class)
     public ResponseEntity<String> handleRoomescapeException(final RoomescapeException e) {
         return ResponseEntity.internalServerError().body(e.getMessage());
