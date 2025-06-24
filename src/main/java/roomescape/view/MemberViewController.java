@@ -15,4 +15,14 @@ public class MemberViewController {
     public String getPopularThemesPage() {
         return "index";
     }
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String getSignupPage() {
+        return "signup";
+    }
 }
