@@ -9,8 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Reservation {
 
     @Id
@@ -37,24 +42,5 @@ public class Reservation {
         this.name = new ReservationName(name);
         this.date = new ReservationDate(date);
         this.time = time;
-    }
-
-    protected Reservation() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public ReservationName getName() {
-        return name;
-    }
-
-    public ReservationDate getDate() {
-        return date;
-    }
-
-    public ReservationTime getTime() {
-        return time;
     }
 }

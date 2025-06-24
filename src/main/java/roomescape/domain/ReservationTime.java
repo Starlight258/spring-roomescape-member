@@ -6,9 +6,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalTime;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import roomescape.common.TimeUtils;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class ReservationTime {
 
     @Id
@@ -20,16 +25,5 @@ public class ReservationTime {
 
     public ReservationTime(final String startAt) {
         this.startAt = TimeUtils.parseLocalTime(startAt);
-    }
-
-    public ReservationTime() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalTime getStartAt() {
-        return startAt;
     }
 }
