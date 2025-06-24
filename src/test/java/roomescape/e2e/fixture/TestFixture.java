@@ -1,4 +1,4 @@
-package roomescape.fixture;
+package roomescape.e2e.fixture;
 
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
