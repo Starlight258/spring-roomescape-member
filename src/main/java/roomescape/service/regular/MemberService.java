@@ -1,9 +1,7 @@
 package roomescape.service.regular;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
-import roomescape.auth.CookieGenerator;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberName;
 import roomescape.domain.member.MemberRole;
@@ -23,11 +21,9 @@ public class MemberService {
     private static final String ROLE = "role";
 
     private final MemberRepository memberRepository;
-    private final CookieGenerator cookieGenerator;
 
-    public MemberService(final MemberRepository memberRepository, final CookieGenerator cookieGenerator) {
+    public MemberService(final MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.cookieGenerator = cookieGenerator;
     }
 
     public SignupResponse signup(final SignupRequest request) {
@@ -40,7 +36,7 @@ public class MemberService {
         return SignupResponse.from(savedMember);
     }
 
-    public ResponseCookie login(final LoginRequest request, final HttpSession httpSession) {
+    public void login(final LoginRequest request, final HttpSession httpSession) {
         Member member = getMember(request.email());
         validatePassword(member.getPassword(), request.password());
 
@@ -48,7 +44,6 @@ public class MemberService {
         httpSession.setAttribute(TOKEN, memberId);
         MemberRole role = member.getRole();
         httpSession.setAttribute(ROLE, role.name());
-        return cookieGenerator.makeCookie(TOKEN, memberId.toString());
     }
 
     public CheckLoginResponse checkLogin(final HttpSession httpSession) {
