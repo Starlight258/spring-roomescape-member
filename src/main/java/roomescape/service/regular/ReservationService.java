@@ -44,7 +44,7 @@ public class ReservationService {
         validateReservationExists(reservationDate, reservationTime, theme);
 
         Reservation savedReservation = reservationRepository.save(
-                new Reservation(reservationDate, reservationTime, theme, member));
+                Reservation.createReservation(reservationDate, reservationTime, theme, member));
         return ReservationPreservationResponse.from(savedReservation);
     }
 

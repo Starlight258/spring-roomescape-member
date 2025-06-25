@@ -21,7 +21,7 @@ class ReservationTest {
         Theme theme = UnitTestFixture.makeTheme();
 
         // When & Then
-        Assertions.assertThatCode(() -> new Reservation(date, time, theme, member))
+        Assertions.assertThatCode(() -> Reservation.createReservation(date, time, theme, member))
                 .doesNotThrowAnyException();
     }
 
@@ -34,7 +34,7 @@ class ReservationTest {
         Theme theme = UnitTestFixture.makeTheme();
 
         // When & Then
-        Assertions.assertThatThrownBy(() -> new Reservation(date, time, theme, member))
+        Assertions.assertThatThrownBy(() -> Reservation.createReservation(date, time, theme, member))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Reservation date and time should be future");
 

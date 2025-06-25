@@ -45,14 +45,19 @@ public class Reservation {
     private Member member;
 
     public Reservation(final ReservationDate date, final ReservationTime time, final Theme theme, final Member member) {
-        validateFutureDateTime(date, time);
         this.date = date;
         this.time = time;
         this.theme = theme;
         this.member = member;
     }
 
-    private void validateFutureDateTime(final ReservationDate date, final ReservationTime time) {
+    public static Reservation createReservation(final ReservationDate date, final ReservationTime time,
+                                                final Theme theme, final Member member) {
+        validateFutureDateTime(date, time);
+        return new Reservation(date, time, theme, member);
+    }
+
+    private static void validateFutureDateTime(final ReservationDate date, final ReservationTime time) {
         LocalDateTime dateTime = LocalDateTime.of(date.getDate(), time.getStartAt());
         LocalDateTime nowDateTime = LocalDateTime.now();
         if (!dateTime.isAfter(nowDateTime)) {
