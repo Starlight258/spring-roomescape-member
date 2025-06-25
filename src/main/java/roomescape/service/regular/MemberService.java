@@ -1,10 +1,11 @@
-package roomescape.service;
+package roomescape.service.regular;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberName;
+import roomescape.domain.member.MemberRole;
 import roomescape.dto.request.member.LoginRequest;
 import roomescape.dto.request.member.SignupRequest;
 import roomescape.dto.response.member.CheckLoginResponse;
@@ -13,6 +14,7 @@ import roomescape.exception.ConflictException;
 import roomescape.exception.RoomescapeException;
 import roomescape.exception.UnAuthorizedException;
 import roomescape.repository.MemberRepository;
+import roomescape.auth.CookieGenerator;
 
 @Service
 public class MemberService {
@@ -32,7 +34,8 @@ public class MemberService {
         String email = request.email();
         validateDistinctName(memberName);
         validateDistinctEmail(email);
-        Member savedMember = memberRepository.save(new Member(memberName, email, request.password()));
+        Member savedMember = memberRepository.save(
+                new Member(memberName, email, request.password(), MemberRole.REGULAR));
         return SignupResponse.from(savedMember);
     }
 

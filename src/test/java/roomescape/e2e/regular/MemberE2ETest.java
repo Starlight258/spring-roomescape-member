@@ -1,4 +1,4 @@
-package roomescape.e2e;
+package roomescape.e2e.regular;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -59,7 +59,7 @@ public class MemberE2ETest {
 
     @Test
     void checkLogin() {
-        String sessionId = E2ETestFixture.signUpAndLogin();
+        String sessionId = E2ETestFixture.signUpRegularAndLogin();
 
         CheckLoginResponse response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

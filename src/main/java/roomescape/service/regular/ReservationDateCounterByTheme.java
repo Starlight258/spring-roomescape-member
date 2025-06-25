@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.service.regular;
 
 import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.theme.Theme;

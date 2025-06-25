@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.service.regular;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

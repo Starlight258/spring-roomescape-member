@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.regular;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -14,7 +14,7 @@ import roomescape.dto.request.member.LoginRequest;
 import roomescape.dto.request.member.SignupRequest;
 import roomescape.dto.response.member.CheckLoginResponse;
 import roomescape.dto.response.member.SignupResponse;
-import roomescape.service.MemberService;
+import roomescape.service.regular.MemberService;
 
 @RestController
 public class MemberController {

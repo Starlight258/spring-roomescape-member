@@ -3,6 +3,7 @@ package roomescape.fixture;
 import java.time.LocalDate;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberName;
+import roomescape.domain.member.MemberRole;
 import roomescape.domain.theme.Theme;
 import roomescape.domain.theme.ThemeDescription;
 import roomescape.domain.theme.ThemeName;
@@ -21,7 +22,7 @@ public class UnitTestFixture {
         return LocalDate.now().plusDays(1);
     }
 
-    public static Member makeMember() {
-        return new Member(new MemberName("mint"), "mint@gmail.com", "password");
+    public static Member makeRegularMember() {
+        return new Member(new MemberName("mint"), "mint@gmail.com", "password", MemberRole.REGULAR);
     }
 }

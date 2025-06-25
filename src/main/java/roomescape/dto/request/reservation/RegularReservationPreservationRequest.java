@@ -3,7 +3,7 @@ package roomescape.dto.request.reservation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record ReservationPreservationRegularRequest(
+public record RegularReservationPreservationRequest(
         @NotBlank
         String date,
         @NotNull

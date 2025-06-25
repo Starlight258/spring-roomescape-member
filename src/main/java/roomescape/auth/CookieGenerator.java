@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.auth;
 
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;

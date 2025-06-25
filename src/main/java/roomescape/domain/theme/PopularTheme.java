@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.service.ReservationDateCounterByTheme;
+import roomescape.service.regular.ReservationDateCounterByTheme;
 
 public class PopularTheme {
 

@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Map;
 import roomescape.dto.request.member.LoginRequest;
 import roomescape.dto.request.member.SignupRequest;
-import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
+import roomescape.dto.request.reservation.RegularReservationPreservationRequest;
 import roomescape.dto.request.theme.ThemePreservationRequest;
+import roomescape.dto.response.member.SignupResponse;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservationtime.ReservationTimePreservationResponse;
 import roomescape.dto.response.theme.ThemeRetrievalResponse;
@@ -61,12 +62,12 @@ public class E2ETestFixture {
     }
 
     public static Long saveReservation(LocalDate date, Long timeId, Long themeId) {
-        String sessionId = E2ETestFixture.signUpAndLogin();
+        String sessionId = E2ETestFixture.signUpRegularAndLogin();
 
         ReservationPreservationResponse response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .cookie("JSESSIONID", sessionId)
-                .body(new ReservationPreservationRegularRequest(date.toString(), timeId, themeId))
+                .body(new RegularReservationPreservationRequest(date.toString(), timeId, themeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -76,18 +77,42 @@ public class E2ETestFixture {
         return response.id();
     }
 
-    public static String signUpAndLogin() {
-        RestAssured.given().log().all()
+    public static Long signUpRegular() {
+        SignupResponse signupResponse = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new SignupRequest("mint", "mint@gmail.com", "password"))
                 .when().post("/members")
                 .then().log().all()
                 .statusCode(201)
-                .body("id", is(1));
+                .extract()
+                .as(SignupResponse.class);
+        return signupResponse.id();
+    }
+
+    public static String signUpRegularAndLogin() {
+        signUpRegular();
 
         return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest("mint@gmail.com", "password"))
+                .when().post("/login")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .cookie("JSESSIONID");
+    }
+
+    public static String signUpAdminAndLogin() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignupRequest("admin", "admin@gmail.com", "password"))
+                .when().post("/admin/members")
+                .then().log().all()
+                .statusCode(201);
+
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LoginRequest("admin@gmail.com", "password"))
                 .when().post("/login")
                 .then().log().all()
                 .statusCode(200)

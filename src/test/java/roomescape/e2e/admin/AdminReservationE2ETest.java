@@ -1,4 +1,4 @@
-package roomescape.e2e;
+package roomescape.e2e.admin;
 
 import static org.hamcrest.Matchers.is;
 import static roomescape.fixture.E2ETestFixture.DEFAULT_THEME_NAME;
@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
+import roomescape.dto.request.reservation.AdminReservationPreservationRequest;
 import roomescape.fixture.E2ETestFixture;
 import roomescape.fixture.UnitTestFixture;
 
@@ -22,9 +22,10 @@ import roomescape.fixture.UnitTestFixture;
 @TestPropertySource(properties = {
         "spring.sql.init.data-locations="
 })
-public class ReservationE2ETest {
+public class AdminReservationE2ETest {
 
     private static final String FUTURE_DATE = UnitTestFixture.makeFutureDate().toString();
+
     @LocalServerPort
     int port;
 
@@ -35,15 +36,16 @@ public class ReservationE2ETest {
 
     @Test
     void saveReservation() {
+        Long memberId = E2ETestFixture.signUpRegular();
         Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
         Long themeId = E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
-        String sessionId = E2ETestFixture.signUpAndLogin();
+        String sessionId = E2ETestFixture.signUpAdminAndLogin();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .cookie("JSESSIONID", sessionId)
-                .body(new ReservationPreservationRegularRequest(FUTURE_DATE, timeId, themeId))
-                .when().post("/reservations")
+                .body(new AdminReservationPreservationRequest(memberId, FUTURE_DATE, timeId, themeId))
+                .when().post("/admin/reservations")
                 .then().log().all()
                 .statusCode(201)
                 .body("id", is(1));

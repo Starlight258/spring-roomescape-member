@@ -20,8 +20,8 @@ VALUES ('08:00'),
        ('16:00'),
        ('18:00');
 
-INSERT INTO member(name, email, password)
-VALUES ('mint', 'mint@gmail.com', 'password');
+INSERT INTO member(name, email, password, role)
+VALUES ('mint', 'mint@gmail.com', 'password', 'REGULAR');
 
 INSERT INTO reservation(date, theme_id, time_id, member_id)
 VALUES ('2025-06-20', 3L, 1L, 1L),

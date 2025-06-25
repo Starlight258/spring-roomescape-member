@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.regular;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -17,7 +17,7 @@ import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservationtime.ReservationTimeAvailableResponse;
 import roomescape.dto.response.reservationtime.ReservationTimePreservationResponse;
 import roomescape.dto.response.reservationtime.ReservationTimeRetrievalResponse;
-import roomescape.service.ReservationTimeService;
+import roomescape.service.regular.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")

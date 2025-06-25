@@ -1,4 +1,4 @@
-package roomescape.service;
+package roomescape.service.regular;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import roomescape.domain.reservation.ReservationDate;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.theme.Theme;
 import roomescape.dto.request.member.MemberPrinciple;
-import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
+import roomescape.dto.request.reservation.RegularReservationPreservationRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservation.ReservationRetrievalResponse;
 import roomescape.exception.ConflictException;
@@ -35,8 +35,8 @@ public class ReservationService {
         this.memberRepository = memberRepository;
     }
 
-    public ReservationPreservationResponse createByRegular(final ReservationPreservationRegularRequest request,
-                                                           final MemberPrinciple memberPrinciple) {
+    public ReservationPreservationResponse create(final RegularReservationPreservationRequest request,
+                                                  final MemberPrinciple memberPrinciple) {
         Member member = getMember(memberPrinciple.memberId());
         ReservationTime reservationTime = getReservationTime(request.timeId());
         ReservationDate reservationDate = new ReservationDate(TimeUtils.parseLocalDate(request.date()));

@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.regular;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -15,7 +15,7 @@ import roomescape.dto.request.theme.ThemePreservationRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.theme.ThemePopularResponse;
 import roomescape.dto.response.theme.ThemeRetrievalResponse;
-import roomescape.service.ThemeService;
+import roomescape.service.regular.ThemeService;
 
 @RestController
 @RequestMapping("/themes")

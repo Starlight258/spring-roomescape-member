@@ -1,4 +1,4 @@
-package roomescape.e2e;
+package roomescape.e2e.regular;
 
 import static org.hamcrest.Matchers.is;
 import static roomescape.fixture.E2ETestFixture.DEFAULT_THEME_NAME;

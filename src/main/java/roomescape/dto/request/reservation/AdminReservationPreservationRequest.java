@@ -3,9 +3,9 @@ package roomescape.dto.request.reservation;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record ReservationPreservationAdminRequest(
+public record AdminReservationPreservationRequest(
         @NotNull
-        String memberName,
+        Long memberId,
         @NotBlank
         String date,
         @NotNull
