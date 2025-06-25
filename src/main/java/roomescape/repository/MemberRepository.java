@@ -5,10 +5,12 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.member.Member;
+import roomescape.domain.member.MemberName;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    boolean existsByName(@NotBlank String name);
+
+    boolean existsByName(MemberName name);
 
     boolean existsByEmail(@NotBlank String email);
 

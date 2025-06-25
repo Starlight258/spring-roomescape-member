@@ -1,4 +1,4 @@
-package roomescape.domain.reservation;
+package roomescape.domain.member;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;

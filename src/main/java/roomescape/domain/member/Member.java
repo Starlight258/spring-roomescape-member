@@ -1,6 +1,7 @@
 package roomescape.domain.member;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,8 +19,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
     @Column(unique = true, nullable = false)
-    private String name;
+    private MemberName name;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -27,7 +29,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    public Member(final String name, final String email, final String password) {
+    public Member(final MemberName name, final String email, final String password) {
         this.name = name;
         this.email = email;
         this.password = password;

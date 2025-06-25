@@ -38,15 +38,6 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping
-    @RequireRole
-    public ResponseEntity<ReservationPreservationResponse> createByAdmin(
-            final @RequestBody @Valid ReservationPreservationRegularRequest request
-    ) {
-        ReservationPreservationResponse response = reservationService.createByAdmin(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
     @GetMapping
     public List<ReservationRetrievalResponse> findAll() {
         return reservationService.findAll();

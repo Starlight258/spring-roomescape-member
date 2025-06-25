@@ -1,6 +1,7 @@
 package roomescape.domain.reservation;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,7 @@ public class Reservation {
     private Long id;
 
     @Embedded
+    @Column(nullable = false)
     private ReservationDate date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)

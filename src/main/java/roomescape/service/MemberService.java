@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import roomescape.domain.member.Member;
+import roomescape.domain.member.MemberName;
 import roomescape.dto.request.member.LoginRequest;
 import roomescape.dto.request.member.SignupRequest;
 import roomescape.dto.response.member.CheckLoginResponse;
@@ -27,22 +28,18 @@ public class MemberService {
     }
 
     public SignupResponse signup(final SignupRequest request) {
-        String name = request.name();
+        MemberName memberName = new MemberName(request.name());
         String email = request.email();
-        validateDistinctName(name);
+        validateDistinctName(memberName);
         validateDistinctEmail(email);
-        Member savedMember = memberRepository.save(new Member(name, email, request.password()));
+        Member savedMember = memberRepository.save(new Member(memberName, email, request.password()));
         return SignupResponse.from(savedMember);
     }
 
     public ResponseCookie login(final LoginRequest request, final HttpSession httpSession) {
         String email = request.email();
-        if (!memberRepository.existsByEmail(email)) {
-            throw new UnAuthorizedException("Member email does not exist");
-        }
-        if (!memberRepository.existsByEmailAndPassword(email, request.password())) {
-            throw new UnAuthorizedException("Member password does not matched");
-        }
+        validateEmailExists(email);
+        validateEmailAndPassword(request, email);
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new RoomescapeException("Server state cannot be reached"));
         Long memberId = member.getId();
@@ -57,7 +54,7 @@ public class MemberService {
         return CheckLoginResponse.from(member);
     }
 
-    private void validateDistinctName(final String name) {
+    private void validateDistinctName(final MemberName name) {
         if (memberRepository.existsByName(name)) {
             throw new ConflictException("Member name is already exist");
         }
@@ -75,5 +72,17 @@ public class MemberService {
             throw new UnAuthorizedException("You are not logged in");
         }
         return memberId;
+    }
+
+    private void validateEmailAndPassword(final LoginRequest request, final String email) {
+        if (!memberRepository.existsByEmailAndPassword(email, request.password())) {
+            throw new UnAuthorizedException("Member password does not matched");
+        }
+    }
+
+    private void validateEmailExists(final String email) {
+        if (!memberRepository.existsByEmail(email)) {
+            throw new UnAuthorizedException("Member email does not exist");
+        }
     }
 }

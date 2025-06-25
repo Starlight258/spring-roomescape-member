@@ -7,17 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import roomescape.domain.reservation.ReservationDate;
-import roomescape.service.ReservationCounter;
+import roomescape.service.ReservationDateCounterByTheme;
 
 public class PopularTheme {
 
     private final Map<Theme, Long> counts = new LinkedHashMap<>();
 
-    public PopularTheme(final LocalDate nowDate, final List<Theme> themes, final ReservationCounter counter) {
+    public PopularTheme(final LocalDate nowDate, final List<Theme> themes,
+                        final ReservationDateCounterByTheme counter) {
         ReservationDate startDate = new ReservationDate(nowDate.minusDays(7));
         ReservationDate endDate = new ReservationDate(nowDate.minusDays(1));
         for (Theme theme : themes) {
-            Long count = counter.countByDateBetweenAndTheme(startDate, endDate, theme);
+            Long count = counter.count(startDate, endDate, theme);
             counts.put(theme, count);
         }
     }
