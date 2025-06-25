@@ -41,11 +41,9 @@ public class MemberService {
     }
 
     public ResponseCookie login(final LoginRequest request, final HttpSession httpSession) {
-        String email = request.email();
-        validateEmailExists(email);
-        validateEmailAndPassword(request, email);
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new RoomescapeException("Server state cannot be reached"));
+        Member member = getMember(request.email());
+        validatePassword(member.getPassword(), request.password());
+
         Long memberId = member.getId();
         httpSession.setAttribute(TOKEN, memberId);
         MemberRole role = member.getRole();
@@ -72,23 +70,22 @@ public class MemberService {
         }
     }
 
+    private Member getMember(final String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UnAuthorizedException("Member email is not exist"));
+    }
+
+    private void validatePassword(final String correctPassword, final String comparedPassword) {
+        if (!correctPassword.equals(comparedPassword)) {
+            throw new UnAuthorizedException("Password is not correct");
+        }
+    }
+
     private Long getMemberId(final HttpSession httpSession) {
         Long memberId = (Long) httpSession.getAttribute(TOKEN);
         if (memberId == null || !memberRepository.existsById(memberId)) {
             throw new UnAuthorizedException("You are not logged in");
         }
         return memberId;
-    }
-
-    private void validateEmailAndPassword(final LoginRequest request, final String email) {
-        if (!memberRepository.existsByEmailAndPassword(email, request.password())) {
-            throw new UnAuthorizedException("Member password does not matched");
-        }
-    }
-
-    private void validateEmailExists(final String email) {
-        if (!memberRepository.existsByEmail(email)) {
-            throw new UnAuthorizedException("Member email does not exist");
-        }
     }
 }
