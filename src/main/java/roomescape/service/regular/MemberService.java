@@ -3,6 +3,7 @@ package roomescape.service.regular;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import roomescape.auth.CookieGenerator;
 import roomescape.domain.member.Member;
 import roomescape.domain.member.MemberName;
 import roomescape.domain.member.MemberRole;
@@ -14,12 +15,12 @@ import roomescape.exception.ConflictException;
 import roomescape.exception.RoomescapeException;
 import roomescape.exception.UnAuthorizedException;
 import roomescape.repository.MemberRepository;
-import roomescape.auth.CookieGenerator;
 
 @Service
 public class MemberService {
 
     private static final String TOKEN = "token";
+    private static final String ROLE = "role";
 
     private final MemberRepository memberRepository;
     private final CookieGenerator cookieGenerator;
@@ -47,6 +48,8 @@ public class MemberService {
                 .orElseThrow(() -> new RoomescapeException("Server state cannot be reached"));
         Long memberId = member.getId();
         httpSession.setAttribute(TOKEN, memberId);
+        MemberRole role = member.getRole();
+        httpSession.setAttribute(ROLE, role.name());
         return cookieGenerator.makeCookie(TOKEN, memberId.toString());
     }
 

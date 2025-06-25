@@ -102,14 +102,7 @@ public class E2ETestFixture {
                 .cookie("JSESSIONID");
     }
 
-    public static String signUpAdminAndLogin() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(new SignupRequest("admin", "admin@gmail.com", "password"))
-                .when().post("/admin/members")
-                .then().log().all()
-                .statusCode(201);
-
+    public static String loginAdmin() {
         return RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(new LoginRequest("admin@gmail.com", "password"))

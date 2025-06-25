@@ -20,7 +20,7 @@ import roomescape.fixture.UnitTestFixture;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @TestPropertySource(properties = {
-        "spring.sql.init.data-locations="
+        "spring.sql.init.data-locations=classpath:admin-data.sql"
 })
 public class AdminReservationE2ETest {
 
@@ -39,7 +39,7 @@ public class AdminReservationE2ETest {
         Long memberId = E2ETestFixture.signUpRegular();
         Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
         Long themeId = E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
-        String sessionId = E2ETestFixture.signUpAdminAndLogin();
+        String sessionId = E2ETestFixture.loginAdmin();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
