@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
-import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
 import roomescape.fixture.E2ETestFixture;
 import roomescape.fixture.UnitTestFixture;
 
@@ -24,6 +24,7 @@ import roomescape.fixture.UnitTestFixture;
 })
 public class ReservationE2ETest {
 
+    private static final String FUTURE_DATE = UnitTestFixture.makeFutureDate().toString();
     @LocalServerPort
     int port;
 
@@ -36,10 +37,12 @@ public class ReservationE2ETest {
     void saveReservation() {
         Long timeId = E2ETestFixture.saveReservationTime(LocalTime.of(10, 0));
         Long themeId = E2ETestFixture.saveTheme(DEFAULT_THEME_NAME);
+        String sessionId = E2ETestFixture.signUpAndLogin();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationPreservationRequest("mint", "2026-02-05", timeId, themeId))
+                .cookie("JSESSIONID", sessionId)
+                .body(new ReservationPreservationRegularRequest(FUTURE_DATE, timeId, themeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)

@@ -10,7 +10,9 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import roomescape.dto.request.reservation.ReservationPreservationRequest;
+import roomescape.dto.request.member.LoginRequest;
+import roomescape.dto.request.member.SignupRequest;
+import roomescape.dto.request.reservation.ReservationPreservationRegularRequest;
 import roomescape.dto.request.theme.ThemePreservationRequest;
 import roomescape.dto.response.reservation.ReservationPreservationResponse;
 import roomescape.dto.response.reservationtime.ReservationTimePreservationResponse;
@@ -59,9 +61,12 @@ public class E2ETestFixture {
     }
 
     public static Long saveReservation(LocalDate date, Long timeId, Long themeId) {
+        String sessionId = E2ETestFixture.signUpAndLogin();
+
         ReservationPreservationResponse response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new ReservationPreservationRequest("mint", date.toString(), timeId, themeId))
+                .cookie("JSESSIONID", sessionId)
+                .body(new ReservationPreservationRegularRequest(date.toString(), timeId, themeId))
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201)
@@ -69,5 +74,24 @@ public class E2ETestFixture {
                 .as(ReservationPreservationResponse.class);
 
         return response.id();
+    }
+
+    public static String signUpAndLogin() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new SignupRequest("mint", "mint@gmail.com", "password"))
+                .when().post("/members")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
+
+        return RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new LoginRequest("mint@gmail.com", "password"))
+                .when().post("/login")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .cookie("JSESSIONID");
     }
 }
